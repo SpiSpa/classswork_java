@@ -1,0 +1,126 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.io.FileWriter;
+
+public class Project5_Bellus{
+
+    //computer chooses 1, 2, or 3 randomly for rock, paper, or scisors.
+    public static int computerChoice(){
+        Random rand = new Random();
+        int computerMove;
+        computerMove = rand.nextInt(3) + 1;
+        return(computerMove);
+    }
+    // user chooses 1, 2, or 3.
+    public static int userChoice(){
+        String userMove;
+        int userInt;
+        Scanner input = new Scanner(System.in);
+
+        do {  // do until the input is valid, choosing a 1, 2, or 3. 
+        System.out.println("Enter your move as an integer: 1, 2, or 3.");
+        System.out.println("1. Rock");
+        System.out.println("2. Paper");
+        System.out.println("3. Scissors");
+        userMove = input.nextLine();
+        try{
+            userInt = Integer.parseInt(userMove);  // check if input is a number
+        }
+        catch (IllegalArgumentException e){
+            System.out.println(e);
+            userInt = 0;
+        }}
+        while(userInt < 1 || userInt > 3); // check that input is 1, 2, or 3 only.  
+        return(userInt);
+    }
+
+        // change integers to corresponding strings (rock, paper, or scissors) for display and file writing.  
+    public static String convertToHand(int computerMove){  
+        String rpsHand;
+        if (computerMove == 1){
+            rpsHand = "rock";
+        }
+        else if (computerMove == 2){
+            rpsHand = "paper";
+        }
+        else if (computerMove == 3){
+            rpsHand = "scissors";
+        }
+        else{
+            rpsHand = "Invalid Integer";
+        }
+        return(rpsHand);
+    }
+    // determine winner or if there's a tie. 
+    public static String displayResults(int userMove, int computerMove){
+        String results;
+        if (userMove == computerMove){
+            results = "It's a TIE!";
+            return(results);
+        }
+        else if (userMove == 1 && computerMove == 2){ // rock and paper
+            results = "Computer WINS!";
+            return(results);
+        }
+        else if (userMove == 1 && computerMove == 3){ // rock and scissors
+            results = "Player WINS!";
+            return(results);
+        }
+        else if (userMove == 2 && computerMove == 1){ // paper and rock
+            results = "Player WINS!";
+            return(results);
+        }
+        else if (userMove == 2 && computerMove == 3){ // paper and scissors
+            results = "Computer WINS!";
+            return(results);
+        }
+        else if (userMove == 3 && computerMove == 1){ // scissors and rock
+            results = "Computer WINS!";
+            return(results);
+        }
+        else if (userMove == 3 && computerMove == 2){ // scissors and paper
+            results ="Player WINS!";
+            return(results);
+        }
+        else{
+        return("No result yet");
+        }
+    }
+    public static void main(String[] args) {
+        int computerMove;
+        int userMove;
+        String results;
+        String resultsDisplay;
+        String cumulativeResults = ""; // initalize here to append each round.  Variable to write to file
+
+        for (int i = 1; i < 11; i++){
+            do {  // if there is a tie, redo the round until there is a winner. 
+                userMove = userChoice();  
+                computerMove = computerChoice();
+                results = displayResults(userMove, computerMove);  //determines who wins
+                resultsDisplay = "User choice: " + convertToHand(userMove) + "\tComputer Choice: " +
+                convertToHand(computerMove) + "\n" + results;
+                System.out.println("Round " + i); // display results to console
+                System.out.println(resultsDisplay);
+                System.out.println();
+                if (userMove == computerMove){
+                    System.out.println("REDO the round: ");
+                }
+            }
+            while (results == "It's a TIE!");
+            
+            // once a winner is determined, append to string that will be written to file. 
+            cumulativeResults = cumulativeResults + "Round " + i + "\n" + resultsDisplay + "\n"; 
+        }
+        
+        // write results to file
+        try {
+            FileWriter fileWriter = new FileWriter("rockPaperScissors_Results.txt", false);
+            fileWriter.write(cumulativeResults);
+            fileWriter.close();
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
+        
+}}
